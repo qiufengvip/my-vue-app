@@ -1,14 +1,8 @@
-import {createRouter,RouteRecordRaw,createWebHashHistory} from "vue-router"
-const routes:Array<RouteRecordRaw>=[
-  {
-    path:'/',
-    name:'home',
-    component: () => import("../views/HelloWorld.vue"),
-  },
-];
+import { createRouter, createWebHashHistory } from 'vue-router';
+import routes from './routes';
+
 const router = createRouter({
-  history:createWebHashHistory(),
-  routes
-})
-console.log(router);
+  history: createWebHashHistory(),
+  routes,
+});
 export default router;
