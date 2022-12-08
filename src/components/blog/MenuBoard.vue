@@ -4,7 +4,7 @@
     <div v-show="show" class="qsub-header">
       <div id="qsub-header" ref="transitionBox" class="qsub-header-body">
         <div class="qsub-logo selected">
-          <SvgIcon name="logo" color="#00ff00"></SvgIcon>
+          <SvgIcon name="logo" color="#E87955"></SvgIcon>
           <div>秋枫博客</div>
         </div>
         <!-- 移动端 -->
@@ -12,12 +12,11 @@
           <ul class="qsub-menu">
             <li class="qsub-menu-li">
               <div class="qsub-menu-item-f" @click="menuMobile = true">
-                <img :src="menu_colours" alt="菜单" />
+                <SvgIcon name="menu_colours"></SvgIcon>
               </div>
             </li>
           </ul>
         </div>
-
         <!--       网页版菜单   -->
         <div class="qsub-menu-web selected">
           <ul class="qsub-menu">
@@ -25,7 +24,7 @@
               <div class="qsub-menu-item-f" @mouseenter="menuHover(item)" @mouseleave="menuHover(item)">
                 <div v-html="item.resourceData"></div>
                 <span class="qsub-menu-title" v-text="item.resourceName"></span>
-                <div v-if="item.sub.length > 0" v-html="arrowXia"></div>
+                <SvgIcon v-if="item.sub.length > 0" name="down"></SvgIcon>
                 <transition name="el-zoom-in-top">
                   <div v-if="item.sub.length > 0" v-show="item.show" class="qsub-menu-list">
                     <div v-for="(item2, index2) in item.sub" :key="index2" class="qsub-menu-item">
@@ -34,7 +33,7 @@
                         <span class="qsub-menu-title" v-text="item2.resourceName"></span>
                       </div>
                       <div class="qsub-menu-item-b">
-                        <div v-html="arrowYou"></div>
+                        <SvgIcon name="right"></SvgIcon>
                       </div>
                     </div>
                   </div>
@@ -61,7 +60,7 @@
               <div v-html="item.resourceData"></div>
               <span class="menu-mobile-title" v-text="item.resourceName"></span>
             </div>
-            <div v-if="item.sub.length > 0" v-html="arrowXia"></div>
+            <SvgIcon v-if="item.sub.length > 0" name="down"></SvgIcon>
           </div>
           <div v-if="item.sub.length > 0" :style="item.mobileShow ? 'height:' + item.sub.length * 45 + 'px' : 'height:0'" class="menu-mobile-list">
             <div v-for="(item2, subIndex) in item.sub" :key="subIndex" class="menu-mobile-item">
@@ -70,7 +69,7 @@
                 <span class="menu-mobile-title" v-text="item2.resourceName"></span>
               </div>
               <div class="menu-mobile-item-b">
-                <div v-html="arrowYou"></div>
+                <SvgIcon name="right"></SvgIcon>
               </div>
             </div>
           </div>
@@ -82,7 +81,6 @@
 
 <script lang="ts" setup>
 import { toTree } from '@/utils/dataDispose';
-import menu_colours from '@/assets/svg/menu_colours.svg';
 import { getIndexInfo } from '@/http/interface/api';
 
 const userImg = ref('http://file.qsub.cn/userimg.png');
@@ -90,12 +88,6 @@ const show = ref(false);
 const activeIndex = ref('');
 const oldScrollTop = ref(0); // 滚动前，滚动条距顶部的距离
 const search = ref(false);
-const arrowXia = ref(
-  '<svg t="1648789213060" class="icon-arrow" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1875"><path d="M517.688889 796.444444c-45.511111 0-85.333333-17.066667-119.466667-51.2L73.955556 381.155556c-22.755556-22.755556-17.066667-56.888889 5.688888-79.644445 22.755556-22.755556 56.888889-17.066667 79.644445 5.688889l329.955555 364.088889c5.688889 5.688889 17.066667 11.377778 28.444445 11.377778s22.755556-5.688889 34.133333-17.066667l312.888889-364.088889c22.755556-22.755556 56.888889-28.444444 79.644445-5.688889 22.755556 22.755556 28.444444 56.888889 5.688888 79.644445L637.155556 739.555556c-28.444444 39.822222-68.266667 56.888889-119.466667 56.888888 5.688889 0 0 0 0 0z" p-id="1876"></path></svg>'
-);
-const arrowYou = ref(
-  '<svg t="1648789338480" class="icon-arrow" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2017"><path d="M312.888889 995.555556c-17.066667 0-28.444444-5.688889-39.822222-17.066667-22.755556-22.755556-17.066667-56.888889 5.688889-79.644445l364.088888-329.955555c11.377778-11.377778 17.066667-22.755556 17.066667-34.133333 0-11.377778-5.688889-22.755556-17.066667-34.133334L273.066667 187.733333c-22.755556-22.755556-28.444444-56.888889-5.688889-79.644444 22.755556-22.755556 56.888889-28.444444 79.644444-5.688889l364.088889 312.888889c34.133333 28.444444 56.888889 73.955556 56.888889 119.466667s-17.066667 85.333333-51.2 119.466666l-364.088889 329.955556c-11.377778 5.688889-28.444444 11.377778-39.822222 11.377778z" p-id="2018"></path></svg>'
-);
 const menuData = ref<any[]>();
 const menuMobile = ref(false);
 const transitionBox = ref();
@@ -158,7 +150,6 @@ const scrolling = () => {
 <style lang="scss">
 /** 图标 **/
 .icon {
-  fill: var(--text-color);
   width: 16px;
   height: 16px;
   padding-right: 5px;
@@ -240,7 +231,7 @@ const scrolling = () => {
 }
 
 #qsub-header-bg {
-  background-color: var(--bg-brand-color) -menu;
+  background-color: var(--el-color-primary-light-8) -menu;
 }
 
 .qsub-menu-list {

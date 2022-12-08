@@ -114,10 +114,10 @@
 </template>
 
 <script lang="ts" setup>
-import { API } from '../../../../http/interface/api';
+import { API } from '@/http/interface/api';
 import { post } from '../../../../http/http';
 import { ElMessage } from 'element-plus';
-import { toTree } from '../../../../utils/dataDispose';
+import { toTree } from '@/utils/dataDispose';
 
 const postReleaseList = ref([]); // 发布草稿 状态
 const postStateList = ref([]); //审核状态 列表

@@ -4,10 +4,10 @@
     <div class="query-param-term"></div>
     <div class="query-param-function">
       <div class="query-param">
-        <el-button type="primary" size="small" @click="getTableData">刷新</el-button>
+        <el-button type="primary" size="default" @click="getTableData">刷新</el-button>
       </div>
       <div class="query-param">
-        <el-button type="success" size="small" @click="addResource(false)">添加资源</el-button>
+        <el-button type="success" size="default" @click="addResource(false)">添加资源</el-button>
       </div>
     </div>
   </div>
@@ -41,7 +41,7 @@
             <div class="tree-bar">
               <el-button type="success" size="small" @click="addResource(data)">添加</el-button>
               <el-button type="primary" size="small" @click="exitResource(data)">编辑</el-button>
-              <el-button type="danger" size="small" @click="deleteResource(data)">删除</el-button>
+              <el-button type="danger" size="small" :loading="deleteLoading" @click="deleteResource(data)">删除</el-button>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
     </el-tree>
   </div>
   <el-dialog v-model="resourceAddVisible" :title="resourceAddTitle" width="500px">
-    <el-form ref="ruleForm" size="small" :model="resourceAddData" label-width="100px">
+    <el-form ref="ruleForm" size="default" :model="resourceAddData" label-width="100px">
       <el-form-item label="资源id" prop="name">
         <el-input v-model="resourceAddData.id" :disabled="true" />
       </el-form-item>
@@ -141,15 +141,22 @@ const exitResource = (row: any) => {
   resourceAddTitle.value = '修改资源';
   resourceAddVisible.value = true;
 };
+const deleteLoading = ref(false);
 //删除资源
 const deleteResource = (row: any) => {
   let data = {
-    resourceId: row.id,
+    id: row.id,
   };
-  requestResourceDeletedById(data).then((res: any) => {
-    ElMessage.success('成功');
-    getTableData();
-  });
+  deleteLoading.value = true;
+  requestResourceDeletedById(data)
+    .then(() => {
+      ElMessage.success('成功');
+      deleteLoading.value = false;
+      getTableData();
+    })
+    .catch(() => {
+      deleteLoading.value = false;
+    });
 };
 const getTableData = () => {
   let data = {};
@@ -248,16 +255,15 @@ const nodeDragEnd = (Node: any, endNode: any, location: any, event: any) => {
   }
 };
 </script>
-<style lang="scss">
-.resourceList {
-  .el-tree-node__content {
-    height: 50px !important;
-    border: 1px solid var(--border-color);
-    margin-top: -1px;
-  }
-}
-</style>
 <style scoped lang="scss">
+:deep(.el-tree-node__label) {
+  width: 100%;
+}
+:deep(.el-tree-node__content) {
+  height: 50px;
+  border: 1px solid var(--border-color);
+  margin-top: -1px;
+}
 .custom-tree-node {
   display: flex;
   align-items: center;
@@ -269,15 +275,19 @@ const nodeDragEnd = (Node: any, endNode: any, location: any, event: any) => {
 
 .node-a,
 .tree-resourceName {
-  //width: 30px;
+  //width: 150px;
 }
 
 .node-b {
   display: flex;
   align-items: center;
-  //width: 1420px
+  //width: 1000px;
+}
+.resourceList {
+  min-width: 1200px;
 }
 .table-node-main {
+  min-width: 1200px;
   width: 100%;
   display: flex;
   font-size: 25px !important;
@@ -286,7 +296,7 @@ const nodeDragEnd = (Node: any, endNode: any, location: any, event: any) => {
 }
 
 .tree-resourceType {
-  width: 210px;
+  width: 100px;
   border-left: 1px solid var(--border-color);
   padding-left: 10px;
 }
@@ -298,7 +308,7 @@ const nodeDragEnd = (Node: any, endNode: any, location: any, event: any) => {
 }
 
 .resourceData {
-  width: 600px;
+  width: 400px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

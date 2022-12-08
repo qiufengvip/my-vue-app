@@ -1,18 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 
 //客户端
-const clientRoutes = [
-  {
-    path: '/posts', // 文章
-    name: 'posts',
-    component: () => import('../views/client/post/index.vue'),
-  },
-  {
-    path: '/catalog', //分类专栏
-    name: 'catalog',
-    component: () => import('../views/client/catalog/index.vue'),
-  },
-];
 
 //服务端
 const adminRoutes = [
@@ -27,10 +15,15 @@ const adminRoutes = [
     component: () => import('../views/admin/base/constant/index.vue'),
   },
   {
-    path: '/admin/home', //首页
+    path: '', //首页
     name: 'home',
     component: () => import('../views/admin/base/home/index.vue'),
+    meta: {
+      isDefault: true,
+      tagName: '首页',
+    },
   },
+
   {
     path: '/admin/label', //标签管理
     name: 'label',
@@ -77,14 +70,23 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/', //客户端首页
     component: () => import('../views/client/main/index.vue'),
-    children: clientRoutes,
+    // children: clientRoutes,
   },
   {
     path: '/admin', // 后端首页
     component: () => import('../views/admin/main/index.vue'),
     children: adminRoutes,
   },
+  {
+    path: '/posts', // 文章
+    name: 'posts',
+    component: () => import('../views/client/post/index.vue'),
+  },
+  {
+    path: '/catalog', //分类专栏
+    name: 'catalog',
+    component: () => import('../views/client/catalog/index.vue'),
+  },
 ];
-export { clientRoutes };
 export { adminRoutes };
 export default routes;

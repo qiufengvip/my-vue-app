@@ -9,7 +9,7 @@ export const getIndexInfo: any = (params: any) => http.post('/blog/index/getInde
 /**
  * 首页
  */
-export const queryRuleResource: any = (params: any) => http.post('/sysadmin/base/Resource/getMenuData', params); //查询用户的菜单
+export const queryRuleResource: any = (params: any) => http.post('/sysadmin/base/Resource/getMenuData', { resourceType: params }); //查询用户的菜单
 /**
  * 查询常量值
  */

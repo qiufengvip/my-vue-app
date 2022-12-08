@@ -21,32 +21,27 @@
 </template>
 
 <script lang="ts" setup>
-import { request_login, request_se } from '@/http/interface/api';
+import { requestLogin, requestSe } from '@/http/interface/api';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 
 const user = ref({ userName: '秋枫', password: 'yang@2580' });
 
 let router = useRouter();
 
 const loginSubmit = () => {
-  let _this = this;
-  request_login(user.value).then((res: any) => {
-    if (res.code === 0) {
-      ElMessage.success(res.msg);
-      localStorage.setItem('token', { name: res.data.tokenName, value: res.data.tokenValue });
-      router.push({ path: '/admin' });
-    } else {
-      ElMessage.error(res.msg);
-    }
+  requestLogin(user.value).then((data: any) => {
+    ElMessage.success('登录成功');
+    let userData: any = { name: data.tokenName, value: data.tokenValue };
+    sessionStorage.setItem('token', userData);
+    sessionStorage.setItem('admin-menu', JSON.stringify(data.menuList));
+    router.push({ path: '/admin' });
   });
 };
 const signUp = () => {
-  request_se(null).then((res: any) => {
-    if (res.code === 0) {
-    } else {
-      ElMessage.error(res.msg);
-    }
+  requestSe(null).then((res: any) => {
+    ElMessage.success(res);
   });
 };
 </script>

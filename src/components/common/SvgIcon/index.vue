@@ -1,10 +1,12 @@
 <template>
-  <svg aria-hidden="true" class="svg-icon">
+  <svg aria-hidden="true" class="svg-icon" :style="'fill: ' + color + ';color:' + color + ';'">
     <use :xlink:href="symbolId" :fill="color" />
   </svg>
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
+
 const symbolId = ref('');
 const props = defineProps({
   // 使用的svg图标名称，也就是svg文件名
@@ -30,7 +32,7 @@ onMounted(() => {
 .svg-icon {
   width: 16px;
   height: 16px;
-  color: #333;
+  color: currentColor;
   fill: currentColor;
 }
 </style>

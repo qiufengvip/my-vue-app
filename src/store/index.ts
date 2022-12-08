@@ -13,28 +13,12 @@ export default createStore({
     // 获取set方法
     // 菜单栏的数据
     setMenuList: (state) => {
-      state.menuList = [
-        {
-          id: 89,
-          isCatalog: '',
-          orderby: 1,
-          serverName: '首页', //名称
-          serverType: 0, //类型
-          serverUrl: '/admin/resource', // 路径
-          status: 1,
-          isDefault: true, // 是否展示默认
-        },
-        {
-          id: 90,
-          isCatalog: '',
-          orderby: 1,
-          serverName: '权限管理',
-          serverType: 0,
-          serverUrl: '/admin/authority',
-          status: 1,
-        },
-      ];
-      console.log('🟧', state.menuList);
+      let menu: any = sessionStorage['admin-menu'];
+      if (menu) {
+        state.menuList = JSON.parse(menu);
+      } else {
+        throw '未设置菜单';
+      }
     },
     // 用户信息
     setUserInfo: (state, val) => {

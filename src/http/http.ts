@@ -14,8 +14,8 @@ const http = axios.create({
 // 请求拦截器，设置token
 http.interceptors.request.use(
   (config) => {
-    if (localStorage && localStorage.getItem('token')) {
-      const token = localStorage.getItem('token');
+    if (sessionStorage && sessionStorage.getItem('token')) {
+      const token = sessionStorage.getItem('token');
       // @ts-ignore
       token && (config.headers[token.name] = token.data);
     }
@@ -32,15 +32,22 @@ http.interceptors.request.use(
 // 响应拦截器
 http.interceptors.response.use(
   (response: any) => {
-    console.log(response.data.data);
     if (response.status === 200 && response.data.code !== undefined && response.data.code !== 0) {
+      if (response.data.code == 993) {
+        ElMessage({
+          message: '登录超时,请重新登录',
+          type: 'error',
+          grouping: true,
+        });
+        sessionStorage.setItem('token', '');
+        return Promise.reject(response);
+      }
       //返回错误拦截
       ElMessage.error(response.data.msg);
       return Promise.reject(response);
     } else if (response.data instanceof Blob) {
       return response.data;
     }
-    console.log(response.data.data);
     return response.data.data; //返回数据体
   },
   (error) => {
@@ -50,7 +57,7 @@ http.interceptors.response.use(
         type: 'error',
         grouping: true,
       });
-      localStorage.setItem('token', '');
+      sessionStorage.setItem('token', '');
     } else {
       if (error.message.indexOf('timeout') > -1) {
         ElMessage.error('请求超时');

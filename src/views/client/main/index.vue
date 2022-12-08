@@ -39,6 +39,7 @@ import PostList from '../../../components/blog/PostList.vue';
 import HotPost from '../../../components/blog/HotPost.vue';
 import HotComments from '../../../components/blog/HotComments.vue';
 import Copyright from '../../../components/blog/Copyright.vue';
+import { ref } from 'vue';
 
 const nav = ref(['最新', '前端', '后端', '随笔']);
 

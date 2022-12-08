@@ -1,7 +1,6 @@
 <template>
   <div id="tags-view-container" class="tags-view-container">
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
-      {{ '顶部' }}
       <router-link
         v-for="tag in visitedViews"
         ref="tag"
@@ -53,6 +52,7 @@ const routes = router.options.routes;
 
 // 从路由中找到默认页面
 function getDefaultTags(routes: any, basePath = '') {
+  console.log('从路由中找到默认页面', routes, basePath);
   let tags: any = [];
   routes.forEach((route: any) => {
     if (route.meta && route.meta.isDefault) {
@@ -77,7 +77,7 @@ function getDefaultTags(routes: any, basePath = '') {
 
 function initTags() {
   defaultTags.value = getDefaultTags(routes);
-  // console.log(defaultTags.value);
+  console.log(defaultTags.value);
   for (const tag of defaultTags.value) {
     props.store.dispatch('tagsView/addView', tag);
   }
