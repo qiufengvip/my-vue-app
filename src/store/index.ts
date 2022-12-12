@@ -17,7 +17,7 @@ export default createStore({
       if (menu) {
         state.menuList = JSON.parse(menu);
       } else {
-        throw '未设置菜单';
+        window.location.href = '/#/admin/login';
       }
     },
     // 用户信息

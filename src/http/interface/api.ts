@@ -103,7 +103,7 @@ export const requestRuleDeleted = (parent: any) => http.post('/sysadmin/base/rol
 /**
  * 人员管理
  */
-export const request_user_getUserList = (parent: any) => http.post('/sysadmin/base/user/getUserList', parent);
+export const requestUserGetUserList = (parent: any) => http.post('/sysadmin/base/user/getUserList', parent);
 
 /**
  * 角色人员管理

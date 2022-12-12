@@ -6,16 +6,17 @@
           <SvgIcon color="#E87955" name="logo"></SvgIcon>
           <div v-if="!isCollapse">秋枫博客</div>
         </div>
-        <el-menu :collapse="isCollapse" class="el-menu-vertical selected" default-active="2" @select="menuSelect">
-          <template v-for="item in menuData">
+        <el-menu background-color="#545c6400" :collapse="isCollapse" class="el-menu-vertical selected" default-active="2" @select="menuSelect">
+          <template v-for="(item, index) in menuData">
             <template v-if="item.children">
-              <el-sub-menu :index="item.serverUrl" class="menu-item">
+              <el-sub-menu :key="index" :index="item.serverUrl" class="menu-item">
                 <template #title>
                   <SvgIcon :name="item.icon"></SvgIcon>
                   <span class="menu-title" v-text="item.serverName"></span>
                 </template>
+
                 <el-menu-item-group>
-                  <template v-for="itemChildren in item.children">
+                  <template v-for="(itemChildren, itemIndex) in item.children">
                     <el-menu-item :index="itemChildren.serverUrl">
                       <SvgIcon :name="itemChildren.icon"></SvgIcon>
                       <span class="menu-title" v-text="itemChildren.serverName"></span>
@@ -25,7 +26,7 @@
               </el-sub-menu>
             </template>
             <template v-else>
-              <el-menu-item :index="item.serverUrl">
+              <el-menu-item :key="index" :index="item.serverUrl">
                 <SvgIcon :name="item.icon"></SvgIcon>
                 <span class="menu-title" v-text="item.serverName"></span>
               </el-menu-item>
@@ -107,7 +108,7 @@ const menuSelect = (index: any) => {
 const addTabs = (tab: any) => {};
 const exit = () => {
   sessionStorage.setItem('token', '');
-  window.location.href = '/admin';
+  window.location.href = '/#/admin/login';
 };
 </script>
 <style lang="scss">
@@ -150,6 +151,7 @@ const exit = () => {
   height: 100%;
   display: flex;
   flex-direction: column;
+  border-right: #edf0fc solid 1px;
 }
 
 .common-layout-main {

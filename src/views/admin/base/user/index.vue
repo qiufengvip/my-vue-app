@@ -25,7 +25,7 @@
       </div>
       <div class="query-param-function">
         <div class="query-param">
-          <el-button type="success" size="small">查询</el-button>
+          <el-button type="success" size="small" @click="getUserList">查询</el-button>
         </div>
         <div class="query-param">
           <el-button type="primary" size="small">修改密码</el-button>
@@ -40,7 +40,7 @@
     </div>
     <div ref="centerMain" class="center">
       <el-table ref="userTable" border :data="tableData" style="height: 100%">
-        <el-table-column fixed type="index" width="50" label="序号" />
+        <el-table-column fixed type="index" width="100" label="序号" />
         <el-table-column fixed label="头像" width="70">
           <template #default="scope">
             <el-avatar :src="scope.row.headImg" />
@@ -51,7 +51,7 @@
         <el-table-column prop="email" label="邮箱" width="200" />
         <el-table-column prop="github" label="github" width="200" />
         <el-table-column prop="gitee" label="gitee" width="200" />
-        <el-table-column prop="ip" label="注册地址" />
+        <el-table-column prop="ip" label="注册地址" min-width="200" />
         <el-table-column fixed="right" label="操作" width="160">
           <template #default>
             <el-button type="primary" size="small">编辑</el-button>
@@ -64,7 +64,8 @@
       <el-pagination
         background
         :page-sizes="[20, 60, 100, 300]"
-        layout="total, sizes, prev, pager, next, jumper"
+        small
+        layout="prev, pager, next"
         :total="pagination.total"
         :page-size="pagination.pageSize"
         @size-change="handleSizeChange"
@@ -75,11 +76,9 @@
 </template>
 
 <script lang="ts" setup>
-import { post } from '../../../../http/http';
-import { API, request_user_getUserList } from '../../../../http/interface/api';
-import { ElMessage } from 'element-plus';
+import { requestUserGetUserList, selectConstantData } from '@/http/interface/api';
 
-const queryParam = ref();
+const queryParam = ref({});
 const stateList = ref([]);
 const tableData = ref([]);
 const pagination = ref({
@@ -89,12 +88,10 @@ const pagination = ref({
 });
 
 onMounted(() => {
-  post(API.selectConstantData, { code: 'userState' }).then((res: any) => {
-    if (res.code === 0) {
-      stateList.value = res.data;
-    }
+  selectConstantData({ code: 'userState' }).then((data: any) => {
+    stateList.value = data;
+    getUserList();
   });
-  getUserList();
 });
 
 const handleClick = (click: any) => {
@@ -103,14 +100,10 @@ const handleClick = (click: any) => {
 const getUserList = () => {
   queryParam.value.pageSize = pagination.value.pageSize;
   queryParam.value.pageNum = pagination.value.pageNum;
-  request_user_getUserList(queryParam).then((res: any) => {
-    if (res.code) {
-      ElMessage.error(res.msg);
-    } else {
-      tableData.value = res.list;
-      pagination.value.pageNum = res.pageNum;
-      pagination.value.total = res.total;
-    }
+  requestUserGetUserList(queryParam.value).then((res: any) => {
+    tableData.value = res.list;
+    pagination.value.pageNum = res.pageNum;
+    pagination.value.total = res.total;
   });
 };
 // 每页条数被改变
@@ -125,7 +118,13 @@ const handleCurrentChange = (currentPage: number) => {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.query-param-main {
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .common-layout {
   height: 100%;
 }
@@ -165,11 +164,12 @@ const handleCurrentChange = (currentPage: number) => {
   flex: 1;
 }
 .center {
-  padding-left: 10px;
+  padding-left: 5px;
 }
 
 .bottom {
-  padding-top: 10px;
-  padding-left: 10px;
+  display: flex;
+  padding: 10px;
+  flex-direction: row-reverse;
 }
 </style>

@@ -1,19 +1,19 @@
 <template>
   <div class="scroll-pane">
     <div class="move-btn" @click="handleScrollBtn(100)">
-      <el-icon><arrow-left /></el-icon>
+      <el-icon><ArrowLeft /></el-icon>
     </div>
     <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.prevent="handleScroll">
       <slot />
     </el-scrollbar>
 
     <div class="move-btn move-btn-right" @click="handleScrollBtn(-100)">
-      <el-icon><arrow-right /></el-icon>
+      <el-icon><ArrowRight /></el-icon>
     </div>
 
     <div class="close-con">
       <el-dropdown size="small" trigger="click" @command="handleCommand">
-        <el-icon :size="16"><circle-close /></el-icon>
+        <el-icon :size="16"><CircleClose /></el-icon>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item command="others">关闭其他</el-dropdown-item>
@@ -27,6 +27,7 @@
 
 <script lang="ts" setup>
 import { computed, getCurrentInstance, ref } from 'vue';
+import { ArrowLeft, ArrowRight, CircleClose } from '@element-plus/icons';
 
 const tagAndTagSpacing = 4;
 

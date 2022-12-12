@@ -1,83 +1,85 @@
 <!-- 资源管理 -->
 <template>
-  <div class="query-param-main">
-    <div class="query-param-term"></div>
-    <div class="query-param-function">
-      <div class="query-param">
-        <el-button type="primary" size="default" @click="getTableData">刷新</el-button>
-      </div>
-      <div class="query-param">
-        <el-button type="success" size="default" @click="addResource(false)">添加资源</el-button>
-      </div>
-    </div>
-  </div>
-  <div class="table-node-main">
-    <div class="custom-tree-node node-title">
-      <div class="node-a">
-        <div class="tree-resourceName">资源名称</div>
-      </div>
-      <div class="node-b">
-        <div class="tree-resourceType">资源类型</div>
-        <div class="tree-resourceValue">资源值</div>
-        <div class="resourceData">资源数据</div>
-        <div class="tree-bar">操作</div>
+  <div>
+    <div class="query-param-main">
+      <div class="query-param-term"></div>
+      <div class="query-param-function">
+        <div class="query-param">
+          <el-button type="primary" size="default" @click="getTableData">刷新</el-button>
+        </div>
+        <div class="query-param">
+          <el-button type="success" size="default" @click="addResource(false)">添加资源</el-button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="resourceList">
-    <el-tree ref="resourceTree" :data="tableData" node-key="id" default-expand-all :expand-on-click-node="false" :draggable="true" @node-drag-end="nodeDragEnd">
-      <template #default="{ node, data }">
-        <div class="custom-tree-node">
-          <div class="node-a">
-            <div class="tree-resourceName">{{ data.resourceName }}</div>
-          </div>
-          <div class="node-b">
-            <template v-for="item in resourceType">
-              <div v-if="item.value === data.resourceType" class="tree-resourceType">{{ item.label }}</div>
-            </template>
-            <div class="tree-resourceValue">{{ data.resourceValue }}</div>
-            <!--                    <div class="tree-resourceValue">&nbsp{{ data.resourceValue }}</div>-->
-            <div class="resourceData">{{ data.resourceData }}</div>
-            <div class="tree-bar">
-              <el-button type="success" size="small" @click="addResource(data)">添加</el-button>
-              <el-button type="primary" size="small" @click="exitResource(data)">编辑</el-button>
-              <el-button type="danger" size="small" :loading="deleteLoading" @click="deleteResource(data)">删除</el-button>
+    <div class="table-node-main">
+      <div class="custom-tree-node node-title">
+        <div class="node-a">
+          <div class="tree-resourceName">资源名称</div>
+        </div>
+        <div class="node-b">
+          <div class="tree-resourceType">资源类型</div>
+          <div class="tree-resourceValue">资源值</div>
+          <div class="resourceData">资源数据</div>
+          <div class="tree-bar">操作</div>
+        </div>
+      </div>
+    </div>
+    <div class="resourceList">
+      <el-tree ref="resourceTree" :data="tableData" node-key="id" default-expand-all :expand-on-click-node="false" :draggable="true" @node-drag-end="nodeDragEnd">
+        <template #default="{ node, data }">
+          <div class="custom-tree-node">
+            <div class="node-a">
+              <div class="tree-resourceName">{{ data.resourceName }}</div>
+            </div>
+            <div class="node-b">
+              <template v-for="item in resourceType">
+                <div v-if="item.value === data.resourceType" class="tree-resourceType">{{ item.label }}</div>
+              </template>
+              <div class="tree-resourceValue">{{ data.resourceValue }}</div>
+              <!--                    <div class="tree-resourceValue">&nbsp{{ data.resourceValue }}</div>-->
+              <div class="resourceData">{{ data.resourceData }}</div>
+              <div class="tree-bar">
+                <el-button type="success" size="small" @click="addResource(data)">添加</el-button>
+                <el-button type="primary" size="small" @click="exitResource(data)">编辑</el-button>
+                <el-button type="danger" size="small" :loading="deleteLoading" @click="deleteResource(data)">删除</el-button>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
+      </el-tree>
+    </div>
+    <el-dialog v-model="resourceAddVisible" :title="resourceAddTitle" width="500px">
+      <el-form ref="ruleForm" size="default" :model="resourceAddData" label-width="100px">
+        <el-form-item label="资源id" prop="name">
+          <el-input v-model="resourceAddData.id" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="父id" prop="name">
+          <el-input v-model="resourceAddData.pid" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="资源名称" prop="name">
+          <el-input v-model="resourceAddData.resourceName" />
+        </el-form-item>
+        <el-form-item label="资源类型">
+          <el-select v-model="resourceAddData.resourceType" placeholder="选择资源类型">
+            <el-option v-for="item in resourceType" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="资源内容" prop="name">
+          <el-input v-model="resourceAddData.resourceValue" type="textarea" />
+        </el-form-item>
+        <el-form-item label="资源值" prop="name">
+          <el-input v-model="resourceAddData.resourceData" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="danger" @click="resourceAddVisible = false">取消</el-button>
+          <el-button type="primary" @click="resourceAddSubmit">确定</el-button>
+        </span>
       </template>
-    </el-tree>
+    </el-dialog>
   </div>
-  <el-dialog v-model="resourceAddVisible" :title="resourceAddTitle" width="500px">
-    <el-form ref="ruleForm" size="default" :model="resourceAddData" label-width="100px">
-      <el-form-item label="资源id" prop="name">
-        <el-input v-model="resourceAddData.id" :disabled="true" />
-      </el-form-item>
-      <el-form-item label="父id" prop="name">
-        <el-input v-model="resourceAddData.pid" :disabled="true" />
-      </el-form-item>
-      <el-form-item label="资源名称" prop="name">
-        <el-input v-model="resourceAddData.resourceName" />
-      </el-form-item>
-      <el-form-item label="资源类型">
-        <el-select v-model="resourceAddData.resourceType" placeholder="选择资源类型">
-          <el-option v-for="item in resourceType" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="资源内容" prop="name">
-        <el-input v-model="resourceAddData.resourceValue" type="textarea" />
-      </el-form-item>
-      <el-form-item label="资源值" prop="name">
-        <el-input v-model="resourceAddData.resourceData" type="textarea" />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="danger" @click="resourceAddVisible = false">取消</el-button>
-        <el-button type="primary" @click="resourceAddSubmit">确定</el-button>
-      </span>
-    </template>
-  </el-dialog>
 </template>
 
 <script lang="ts" setup>

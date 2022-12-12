@@ -211,28 +211,16 @@ table {
 
 
 
-/*//滚动条的宽度*/
-.your-table .el-table__body-wrapper::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-/*//滚动条的滑块*/
-.your-table .el-table__body-wrapper::-webkit-scrollbar-thumb {
-    background-color: #a1a3a9;
-    border-radius: 3px;
-}
-
 /*如果是整个页面的滚动条风格是一致的，直接改全局的滚动条样式也可以有效果*/
 /*//滚动条的宽度*/
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #a1a3a9;
-    border-radius: 10px;
+    background-color: rgba(161, 163, 169, 0.4);
+    border-radius: 6px;
 }
 .query-param-main{
     display: flex;
@@ -244,5 +232,5 @@ table {
 }
 
 .query-param{
-    margin: 10px;
+    margin: 5px;
 }
