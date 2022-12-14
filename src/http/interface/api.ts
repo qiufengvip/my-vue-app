@@ -79,6 +79,11 @@ export { API };
 /**
  * 登录注册
  */
+/**
+ * 验证码
+ * @param params
+ */
+export const requestGetVerifyCode: any = (params: any) => http.post('/sysadmin/base/user/getVerifyCode', params, { responseType: 'blob' });
 //登录
 export const requestLogin: any = (params: any) => http.post('/sysadmin/base/user/signIn', params);
 //注册

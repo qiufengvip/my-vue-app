@@ -28,18 +28,19 @@
           <el-button type="success" size="small" @click="getUserList">查询</el-button>
         </div>
         <div class="query-param">
-          <el-button type="primary" size="small">修改密码</el-button>
+          <el-button :disabled="!(multipleSelection.length > 0)" type="primary" size="small">修改密码</el-button>
         </div>
         <div class="query-param">
-          <el-button type="warning" size="small">封禁账户</el-button>
+          <el-button :disabled="!(multipleSelection.length > 0)" type="warning" size="small">封禁账户</el-button>
         </div>
         <div class="query-param">
-          <el-button type="danger" size="small">删除用户</el-button>
+          <el-button :disabled="!(multipleSelection.length > 0)" type="danger" size="small">删除用户</el-button>
         </div>
       </div>
     </div>
     <div ref="centerMain" class="center">
-      <el-table ref="userTable" border :data="tableData" style="height: 100%">
+      <el-table ref="userTable" stripe :data="tableData" :row-class-name="tableRowClassName" style="height: 100%" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" />
         <el-table-column fixed type="index" width="100" label="序号" />
         <el-table-column fixed label="头像" width="70">
           <template #default="scope">
@@ -77,6 +78,7 @@
 
 <script lang="ts" setup>
 import { requestUserGetUserList, selectConstantData } from '@/http/interface/api';
+import { ref } from 'vue';
 
 const queryParam = ref({});
 const stateList = ref([]);
@@ -93,7 +95,46 @@ onMounted(() => {
     getUserList();
   });
 });
+interface User {
+  account: string;
+  deleted: boolean; // 是否注销
+  email: string;
+  gitee: string;
+  github: string;
+  headImg: string; //头像
+  id: string;
+  ip: string; //注册ip
+  password: string; //密码
+  phone: string; // 手机号
+  rn: string; //排序
+  userName: string; // 昵称
+}
 
+// account:"秋枫"
+// deleted:false
+// email:null
+// gitee:null
+// github:null
+// headImg:"http://file.qsub.cn/userimg.png"
+// id:"53353e20741246ec93f044d202ec647e"
+// ip:"127.0.0.1"
+// password:"deaa8ba7b5880ae4ec3c42d531205689"
+// phone:"18510960070"
+// rn:0
+// userName:"秋枫"
+const multipleSelection = ref<User[]>([]);
+const handleSelectionChange = (val: User[]) => {
+  multipleSelection.value = val;
+};
+/**
+ * @desc 单元格的状态 区分正常用户和封禁用户(success-row)与 注销(warning-row)用户
+ */
+const tableRowClassName = (row: User, rowIndex: number) => {
+  if (row.deleted) {
+    return 'warning-row';
+  }
+  return '';
+};
 const handleClick = (click: any) => {
   console.log(click);
 };
@@ -119,6 +160,18 @@ const handleCurrentChange = (currentPage: number) => {
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-table__body-wrapper tr td.el-table-fixed-column--left) {
+  background: #00000000;
+}
+:deep(.el-table__body-wrapper tr td.el-table-fixed-column--right) {
+  background: #00000000;
+}
+:deep(.el-table .warning-row) {
+  --el-table-tr-bg-color: var(--el-color-info-light-9);
+}
+:deep(.el-table .success-row) {
+  --el-table-tr-bg-color: var(--el-color-success-light-9);
+}
 .query-param-main {
   height: 50px;
   display: flex;
